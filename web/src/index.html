@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+  <head>
+    <!-- Set the viewport width to device width for mobile -->
+    <meta name="viewport" content="width=device-width" />
+
+    <title></title>
+
+    <!-- Included CSS Files -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="static/css/app.css">
+  </head>
+
+  <body>
+    <div class="header">
+      <img src="./static/img/logo.svg">
+      <div class="header__links">
+        <div>Login</div>
+        <div>Sign Up</div>
+      </div>
+    </div>
+
+    <div class="find-scrim-header">
+      <div>Find a Scrim</div>
+      <div>100 Teams Looking</div>
+    </div>
+    <div class="find-scrim-search_bar">
+      <div>
+        <label class="inp" for="search_low_mmr">
+          <input type="text" id="search_low_mmr" placeholder="&nbsp;">
+          <span class="label">Low MMR</span>
+          <span class="border"></span>
+        </label>
+      </div>
+      <div>
+        <label class="inp" for="search_high_mmr">
+          <input type="text" id="search_high_mmr" placeholder="&nbsp;">
+          <span class="label">High MMR</span>
+          <span class="border"></span>
+        </label>
+      </div>
+      <div>
+        <label class="inp" for="region">
+          <input type="text" id="region" placeholder="&nbsp;">
+          <span class="label">Region</span>
+          <span class="border"></span>
+        </label>
+      </div>
+      <div>
+        <button>Search</button>
+      </div>
+    </div>
+    <div class="find-scrim">
+      <div class="find-scrim__results">
+        <div class="find-scrim__results__context">
+          1-10 of 100 results
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Team Name</th>
+              <th>Average MMR</th>
+              <th>Region</th>
+              <th>Contact</th>
+              <th>List Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Team Test</td>
+              <td>4301</td>
+              <td>US East</td>
+              <td>420_blaze_it</td>
+              <td>1:20 PM EST</td>
+              <td><button style="font-size: .8rem">Contact</button></td>
+            </tr>
+            <tr>
+              <td>Team Test</td>
+              <td>4301</td>
+              <td>US East</td>
+              <td>420_blaze_it</td>
+              <td>1:20 PM EST</td>
+              <td><button style="font-size: .8rem">Contact</button></td>
+            </tr>
+            <tr>
+              <td>Team Test</td>
+              <td>4301</td>
+              <td>US East</td>
+              <td>420_blaze_it</td>
+              <td>1:20 PM EST</td>
+              <td><button style="font-size: .8rem">Contact</button></td>
+            </tr>
+            <tr>
+              <td>Team Test</td>
+              <td>4301</td>
+              <td>US East</td>
+              <td>420_blaze_it</td>
+              <td>1:20 PM EST</td>
+              <td><button style="font-size: .8rem">Contact</button></td>
+            </tr>
+            <tr>
+              <td>Team Test</td>
+              <td>4301</td>
+              <td>US East</td>
+              <td>420_blaze_it</td>
+              <td>1:20 PM EST</td>
+              <td><button style="font-size: .8rem">Contact</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="find-scrim__results_paging">
+          <div>
+            <img style="margin-right: -.8rem;" src="static/img/chevron_left.svg">
+            <img src="static/img/chevron_left.svg">
+          </div>
+          <div>
+            <img src="static/img/chevron_left.svg">
+          </div>
+          <div>
+            <img src="static/img/chevron_right.svg">
+          </div>
+          <div>
+            <img src="static/img/chevron_right.svg">
+            <img style="margin-left: -.8rem;" src="static/img/chevron_right.svg">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-scrim-header">
+      List Your Team
+    </div>
+    <div class="list-scrim">
+      <div class="list-scrim__fields">
+        <div>
+          <label class="inp" for="average_mmr">
+            <input type="text" id="average_mmr" placeholder="&nbsp;">
+            <span class="label">Average MMR</span>
+            <span class="border"></span>
+          </label>
+        </div>
+        <div>
+          <label class="inp" for="region_2">
+            <input type="text" id="region_2" placeholder="&nbsp;">
+            <span class="label">Region</span>
+            <span class="border"></span>
+          </label>
+        </div>
+        <div>
+          <label class="inp" for="steam_id">
+            <input type="text" id="steam_id" placeholder="&nbsp;">
+            <span class="label">Steam ID</span>
+            <span class="border"></span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <button>List My Team</button>
+      </div>
+    </div>
+  </body>
+</html>

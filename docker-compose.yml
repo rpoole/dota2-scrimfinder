@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.6
+    volumes:
+      - ./docker_volumes/mysqldata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_USER=user
+      - MYSQL_PASS=userpass
+    ports:
+      - "3306:3306"
+  web:
+    build: .
+    environment:
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    volumes:
+      - ./web/src:/web/src
+      - ./web/serverless.yml:/web/serverless.yml
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
