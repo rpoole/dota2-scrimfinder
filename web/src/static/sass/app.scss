@@ -1,3 +1,8 @@
+@import "animations";
+
+$logo-red: #c85153;
+$green: #99BD4C;
+
 html {
     font-size: 16px;
 }
@@ -43,13 +48,9 @@ body {
     box-shadow: 0 3px 6px -6px black;
 }
 
-.find-scrim-search_bar {
-    margin-bottom: .5rem;
-}
-
 .find-scrim-header, .list-scrim-header {
     margin-top: 3rem;
-    margin-bottom: .3rem;
+    margin-bottom: .4rem;
     margin-left: .3rem;
     font-size: 1.3rem;
     color: grey;
@@ -63,9 +64,16 @@ body {
 }
 
 .find-scrim-search_bar {
+    margin-bottom: .5rem;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: center;
+
+    .find-scrim-search_bar_error {
+        color: $logo-red;
+        font-size: .8rem;
+        margin-top: .5rem;
+    }
 
     button {
         padding-left: 2rem;
@@ -73,6 +81,14 @@ body {
         background-repeat: no-repeat;
         background-size: 55% 55%;
         background-position: left -24% center;
+
+        &.valid {
+            background-image: url(../img/search_green.svg);
+        }
+
+        &:hover:not(.invalid) {
+            background-image: url(../img/search_white.svg);
+        }
     }
 
     > div {
@@ -95,6 +111,16 @@ body {
     }
 
     .find-scrim__results {
+        min-height: 5rem;
+
+        .find-scrim__results_loading {
+            margin-top: 5rem;
+            margin-bottom: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         button {
             padding-left: 2rem;
             background-image: url(../img/message_grey.svg);
@@ -130,7 +156,8 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #ddd;
 
         > div {
             cursor: pointer;
@@ -243,7 +270,23 @@ button {
         outline: 0;
     }
 
-    &:hover {
-        background-color: #ddd;
+    &.valid {
+        color: $green;
+        border-color: $green;
+    }
+
+    &.invalid {
+        opacity: .2;
+    }
+
+    &:hover:not(.invalid) {
+        color: white;
+        background-color: #aaa;
+        border-color: darken(#aaa, 10%);
+
+        &.valid {
+            background-color: $green;
+            border-color: darken($green, 10%);
+        }
     }
 }

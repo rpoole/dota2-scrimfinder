@@ -9,154 +9,139 @@
     <!-- Included CSS Files -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="static/css/app.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate.js"></script>
   </head>
 
   <body>
-    <div class="header">
-      <img src="./static/img/logo.svg">
-      <div class="header__links">
-        <div>Login</div>
-        <div>Sign Up</div>
+    <div id="app">
+      <div class="header">
+        <img src="./static/img/logo.svg">
+        <div class="header__links">
+          <div>Login</div>
+          <div>Sign Up</div>
+        </div>
       </div>
-    </div>
 
-    <div class="find-scrim-header">
-      <div>Find a Scrim</div>
-      <div>100 Teams Looking</div>
-    </div>
-    <div class="find-scrim-search_bar">
-      <div>
-        <label class="inp" for="search_low_mmr">
-          <input type="text" id="search_low_mmr" placeholder="&nbsp;">
-          <span class="label">Low MMR</span>
-          <span class="border"></span>
-        </label>
+      <div class="find-scrim-header">
+        <div>Find a Scrim</div>
+        <div>100 Teams Looking</div>
       </div>
-      <div>
-        <label class="inp" for="search_high_mmr">
-          <input type="text" id="search_high_mmr" placeholder="&nbsp;">
-          <span class="label">High MMR</span>
-          <span class="border"></span>
-        </label>
-      </div>
-      <div>
-        <label class="inp" for="region">
-          <input type="text" id="region" placeholder="&nbsp;">
-          <span class="label">Region</span>
-          <span class="border"></span>
-        </label>
-      </div>
-      <div>
-        <button>Search</button>
-      </div>
-    </div>
-    <div class="find-scrim">
-      <div class="find-scrim__results">
-        <div class="find-scrim__results__context">
-          1-10 of 100 results
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Team Name</th>
-              <th>Average MMR</th>
-              <th>Region</th>
-              <th>Contact</th>
-              <th>List Time</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Team Test</td>
-              <td>4301</td>
-              <td>US East</td>
-              <td>420_blaze_it</td>
-              <td>1:20 PM EST</td>
-              <td><button style="font-size: .8rem">Contact</button></td>
-            </tr>
-            <tr>
-              <td>Team Test</td>
-              <td>4301</td>
-              <td>US East</td>
-              <td>420_blaze_it</td>
-              <td>1:20 PM EST</td>
-              <td><button style="font-size: .8rem">Contact</button></td>
-            </tr>
-            <tr>
-              <td>Team Test</td>
-              <td>4301</td>
-              <td>US East</td>
-              <td>420_blaze_it</td>
-              <td>1:20 PM EST</td>
-              <td><button style="font-size: .8rem">Contact</button></td>
-            </tr>
-            <tr>
-              <td>Team Test</td>
-              <td>4301</td>
-              <td>US East</td>
-              <td>420_blaze_it</td>
-              <td>1:20 PM EST</td>
-              <td><button style="font-size: .8rem">Contact</button></td>
-            </tr>
-            <tr>
-              <td>Team Test</td>
-              <td>4301</td>
-              <td>US East</td>
-              <td>420_blaze_it</td>
-              <td>1:20 PM EST</td>
-              <td><button style="font-size: .8rem">Contact</button></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="find-scrim__results_paging">
-          <div>
-            <img style="margin-right: -.8rem;" src="static/img/chevron_left.svg">
-            <img src="static/img/chevron_left.svg">
-          </div>
-          <div>
-            <img src="static/img/chevron_left.svg">
-          </div>
-          <div>
-            <img src="static/img/chevron_right.svg">
-          </div>
-          <div>
-            <img src="static/img/chevron_right.svg">
-            <img style="margin-left: -.8rem;" src="static/img/chevron_right.svg">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="list-scrim-header">
-      List Your Team
-    </div>
-    <div class="list-scrim">
-      <div class="list-scrim__fields">
+      <div class="find-scrim-search_bar">
         <div>
-          <label class="inp" for="average_mmr">
-            <input type="text" id="average_mmr" placeholder="&nbsp;">
-            <span class="label">Average MMR</span>
+          <label class="inp" for="lower_mmr">
+            <input v-model="input.lower_mmr" v-validate type="number" min=0 max=10000 id="lower_mmr" name="lower_mmr" placeholder=" ">
+            <span class="label">Low MMR</span>
             <span class="border"></span>
           </label>
+          <div class="find-scrim-search_bar_error">
+            {{ errors.first('lower_mmr') }}
+          </div>
         </div>
         <div>
-          <label class="inp" for="region_2">
-            <input type="text" id="region_2" placeholder="&nbsp;">
+          <label class="inp" for="upper_mmr">
+            <input v-model="input.upper_mmr" v-validate min=0 max=10000 type="number" id="upper_mmr" name="upper_mmr" placeholder=" ">
+            <span class="label">High MMR</span>
+            <span class="border"></span>
+          </label>
+          <div class="find-scrim-search_bar_error">
+            {{ errors.first('upper_mmr') }}
+          </div>
+        </div>
+        <div>
+          <label class="inp" for="region">
+            <input v-model="input.region" type="text" id="region" placeholder=" ">
             <span class="label">Region</span>
             <span class="border"></span>
           </label>
         </div>
         <div>
-          <label class="inp" for="steam_id">
-            <input type="text" id="steam_id" placeholder="&nbsp;">
-            <span class="label">Steam ID</span>
-            <span class="border"></span>
-          </label>
+          <button v-bind:class="{valid: !errors.any(), invalid: errors.any()}" v-on:click="search(true)">Search</button>
         </div>
       </div>
-      <div>
-        <button>List My Team</button>
+      <div class="find-scrim">
+        <div class="find-scrim__results">
+          <div v-if="searching" class="find-scrim__results_loading">
+            <div class="lds-dual-ring"></div>
+          </div>
+          <template v-if="!searching">
+            <div class="find-scrim__results__context">
+              {{ start + 1 }}-{{ upperCount }} of {{ total }} results
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Team Name</th>
+                  <th>Average MMR</th>
+                  <th>Region</th>
+                  <th>Contact</th>
+                  <th>List Time</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="scrim in scrims">
+                  <td>{{ scrim.team_name }}</td>
+                  <td>{{ scrim.average_mmr }}</td>
+                  <td>{{ scrim.region }}</td>
+                  <td>{{ scrim.contact }}</td>
+                  <td>{{ scrim.list_time | date }}</td>
+                  <td><button style="font-size: .8rem">Contact</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="find-scrim__results_paging">
+              <div v-if="start > 0" v-on:click="first()">
+                <img style="margin-right: -.8rem;" src="static/img/chevron_left.svg">
+                <img src="static/img/chevron_left.svg">
+              </div>
+              <div v-if="start > 0" v-on:click="previous()">
+                <img src="static/img/chevron_left.svg">
+              </div>
+              <div v-if="start + limit <= total" v-on:click="next()">
+                <img src="static/img/chevron_right.svg">
+              </div>
+              <div v-if="start + limit <= total" v-on:click="last()">
+                <img src="static/img/chevron_right.svg">
+                <img style="margin-left: -.8rem;" src="static/img/chevron_right.svg">
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="list-scrim-header">
+        List Your Team
+      </div>
+      <div class="list-scrim">
+        <div class="list-scrim__fields">
+          <div>
+            <label class="inp" for="average_mmr">
+              <input type="text" id="average_mmr" placeholder=" ">
+              <span class="label">Average MMR</span>
+              <span class="border"></span>
+            </label>
+          </div>
+          <div>
+            <label class="inp" for="region_2">
+              <input type="text" id="region_2" placeholder=" ">
+              <span class="label">Region</span>
+              <span class="border"></span>
+            </label>
+          </div>
+          <div>
+            <label class="inp" for="steam_id">
+              <input type="text" id="steam_id" placeholder=" ">
+              <span class="label">Steam ID</span>
+              <span class="border"></span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <button>List My Team</button>
+        </div>
       </div>
     </div>
   </body>
 </html>
+<script src="static/js/app.js"></script>

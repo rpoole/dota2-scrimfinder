@@ -1,3 +1,29 @@
+.lds-dual-ring {
+  display: inline-block;
+  width: 4rem;
+  height: 4rem;
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin: 1px;
+  border-radius: 50%;
+  border: 5px solid #aaa;
+  border-color: #aaa transparent #aaa transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 html {
   font-size: 16px;
 }
@@ -41,13 +67,9 @@ body {
   box-shadow: 0 3px 6px -6px black;
 }
 
-.find-scrim-search_bar {
-  margin-bottom: 0.5rem;
-}
-
 .find-scrim-header, .list-scrim-header {
   margin-top: 3rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
   margin-left: 0.3rem;
   font-size: 1.3rem;
   color: grey;
@@ -60,9 +82,15 @@ body {
 }
 
 .find-scrim-search_bar {
+  margin-bottom: 0.5rem;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
+}
+.find-scrim-search_bar .find-scrim-search_bar_error {
+  color: #c85153;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 .find-scrim-search_bar button {
   padding-left: 2rem;
@@ -70,6 +98,12 @@ body {
   background-repeat: no-repeat;
   background-size: 55% 55%;
   background-position: left -24% center;
+}
+.find-scrim-search_bar button.valid {
+  background-image: url(../img/search_green.svg);
+}
+.find-scrim-search_bar button:hover:not(.invalid) {
+  background-image: url(../img/search_white.svg);
 }
 .find-scrim-search_bar > div:not(:last-child) {
   width: 25%;
@@ -83,6 +117,16 @@ body {
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
   margin-left: 0.2rem;
+}
+.find-scrim .find-scrim__results {
+  min-height: 5rem;
+}
+.find-scrim .find-scrim__results .find-scrim__results_loading {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .find-scrim .find-scrim__results button {
   padding-left: 2rem;
@@ -112,7 +156,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #ddd;
 }
 .find-scrim .find-scrim__results_paging > div {
   cursor: pointer;
@@ -212,8 +257,21 @@ button {
 button:focus {
   outline: 0;
 }
-button:hover {
-  background-color: #ddd;
+button.valid {
+  color: #99BD4C;
+  border-color: #99BD4C;
+}
+button.invalid {
+  opacity: 0.2;
+}
+button:hover:not(.invalid) {
+  color: white;
+  background-color: #aaa;
+  border-color: #919191;
+}
+button:hover:not(.invalid).valid {
+  background-color: #99BD4C;
+  border-color: #7d9c3a;
 }
 
 /*# sourceMappingURL=app.css.map */
