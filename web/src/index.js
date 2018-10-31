@@ -7,6 +7,8 @@ const app = new Koa();
 const router = new Router();
 const helpers = require('./helpers');
 
+let sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+//await sleep(1000)
 
 app.use(async (ctx, next) => {
     try {
@@ -19,6 +21,23 @@ app.use(async (ctx, next) => {
 });
 
 app.use(bodyParser());
+
+const validRegions = [
+    'US West',
+    'US East',
+    'Europe West',
+    'Europe East',
+    'Russia',
+    'SE Asia',
+    'Australia',
+    'South America',
+    'Dubai',
+    'Chile',
+    'Peru',
+    'South Africa',
+    'India',
+    'Japan',
+];
 
 router.get('/active_scrims', async (ctx) => {
     let params = ctx.request.query;
@@ -46,15 +65,14 @@ router.get('/active_scrims', async (ctx) => {
         average_mmr <= :upper_mmr
     `;
 
-    if (params.region) {
-        query += 'AND region = :region';
-        countQuery += 'AND region = :region';
+    let regions = params.regions.split(',');
+
+    if (params.regions && regions.every( r => validRegions.includes(r))) {
+        query += 'AND region in (:regions)';
+        countQuery += 'AND region in (:regions)';
     }
 
     query += 'ORDER BY list_time DESC LIMIT :limit OFFSET :start';
-
-    let sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-    await sleep(1000)
 
     let scrims = await helpers.dbQuery(query, params);
     let total = (await helpers.dbQuery(countQuery, params))[0].count;

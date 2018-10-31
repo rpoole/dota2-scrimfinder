@@ -24,6 +24,10 @@
     transform: rotate(360deg);
   }
 }
+.hidden {
+  visibility: hidden;
+}
+
 html {
   font-size: 16px;
 }
@@ -77,20 +81,16 @@ body {
   align-items: center;
 }
 
-.find-scrim-header > div:last-child {
-  margin-left: auto;
+.input_error {
+  color: #c85153;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 
 .find-scrim-search_bar {
   margin-bottom: 0.5rem;
   display: flex;
-  align-items: baseline;
   justify-content: center;
-}
-.find-scrim-search_bar .find-scrim-search_bar_error {
-  color: #c85153;
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
 }
 .find-scrim-search_bar button {
   padding-left: 2rem;
@@ -162,6 +162,7 @@ body {
 .find-scrim .find-scrim__results_paging > div {
   cursor: pointer;
   margin-right: 2rem;
+  width: 2rem;
 }
 .find-scrim .find-scrim__results_paging > div > img {
   width: 16px;
@@ -169,7 +170,7 @@ body {
 
 .list-scrim .list-scrim__fields {
   display: flex;
-  align-items: center;
+  justify-content: center;
   margin-bottom: 2rem;
 }
 
@@ -179,6 +180,12 @@ body {
   background-repeat: no-repeat;
   background-size: 55% 55%;
   background-position: -38% 48%;
+}
+.list-scrim button.valid {
+  background-image: url(../img/plus_green.svg);
+}
+.list-scrim button:hover:not(.invalid) {
+  background-image: url(../img/plus_white.svg);
 }
 .list-scrim .list-scrim__fields > div {
   flex: 1;
@@ -243,7 +250,7 @@ body {
   transform: scaleX(1);
 }
 
-button {
+.d2sf-btn {
   padding: 0.3rem 0.9rem;
   border-width: 2px;
   border-radius: 5px;
@@ -254,24 +261,52 @@ button {
   font-size: 1.1rem;
   text-transform: uppercase;
 }
-button:focus {
+.d2sf-btn:focus {
   outline: 0;
 }
-button.valid {
+.d2sf-btn.valid {
   color: #99BD4C;
   border-color: #99BD4C;
 }
-button.invalid {
+.d2sf-btn.invalid {
   opacity: 0.2;
 }
-button:hover:not(.invalid) {
+.d2sf-btn:hover:not(.invalid) {
   color: white;
   background-color: #aaa;
   border-color: #919191;
 }
-button:hover:not(.invalid).valid {
+.d2sf-btn:hover:not(.invalid).valid {
   background-color: #99BD4C;
   border-color: #7d9c3a;
+}
+
+.multiselect .multiselect__tags {
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid #c8ccd4;
+  min-height: unset;
+  height: 36px;
+  padding: unset;
+  padding-top: 5px;
+}
+.multiselect .multiselect__single {
+  padding: unset;
+  margin: unset;
+  color: #9098a9;
+  padding-top: 2px;
+}
+.multiselect .multiselect__option {
+  white-space: unset;
+}
+
+.multiselect__field_label {
+  top: -1rem;
+  left: 0;
+  position: absolute;
+  display: inline-block;
+  font-size: 0.75rem;
+  color: #5a667f;
 }
 
 /*# sourceMappingURL=app.css.map */

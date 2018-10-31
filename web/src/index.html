@@ -8,10 +8,13 @@
 
     <!-- Included CSS Files -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
     <link type="text/css" rel="stylesheet" href="static/css/app.css">
+
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate.js"></script>
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
   </head>
 
   <body>
@@ -26,38 +29,51 @@
 
       <div class="find-scrim-header">
         <div>Find a Scrim</div>
-        <div>100 Teams Looking</div>
       </div>
       <div class="find-scrim-search_bar">
-        <div>
+        <div style="flex: 1">
           <label class="inp" for="lower_mmr">
-            <input v-model="input.lower_mmr" v-validate type="number" min=0 max=10000 id="lower_mmr" name="lower_mmr" placeholder=" ">
+            <input v-model="input.lower_mmr" v-validate type="number" min=0 max=10000 id="lower_mmr" name="lower_mmr" placeholder=" " data-vv-scope="search">
             <span class="label">Low MMR</span>
             <span class="border"></span>
           </label>
-          <div class="find-scrim-search_bar_error">
+          <div class="input_error">
             {{ errors.first('lower_mmr') }}
           </div>
         </div>
-        <div>
+        <div style="flex: 1">
           <label class="inp" for="upper_mmr">
-            <input v-model="input.upper_mmr" v-validate min=0 max=10000 type="number" id="upper_mmr" name="upper_mmr" placeholder=" ">
+            <input v-model="input.upper_mmr" v-validate min=0 max=10000 type="number" id="upper_mmr" name="upper_mmr" placeholder=" " data-vv-scope="search">
             <span class="label">High MMR</span>
             <span class="border"></span>
           </label>
-          <div class="find-scrim-search_bar_error">
+          <div class="input_error">
             {{ errors.first('upper_mmr') }}
           </div>
         </div>
-        <div>
-          <label class="inp" for="region">
-            <input v-model="input.region" type="text" id="region" placeholder=" ">
-            <span class="label">Region</span>
-            <span class="border"></span>
-          </label>
+        <div style="flex: 1.5; position: relative;">
+          <div v-if="searchRegions.length > 0" class="multiselect__field_label">
+            Regions
+          </div>
+          <div>
+            <multiselect 
+             v-model="searchRegions" 
+             :options="regions" 
+             :searchable="false" 
+             :multiple="true" 
+             :close-on-select="false" 
+             :clear-on-select="false" 
+             :preserve-search="true" 
+             :max="4"
+             label="abbr"
+             track-by="name"
+             placeholder="Regions" 
+             >
+            </multiselect>
+          </div>
         </div>
         <div>
-          <button v-bind:class="{valid: !errors.any(), invalid: errors.any()}" v-on:click="search(true)">Search</button>
+          <button class="d2sf-btn" v-bind:class="{valid: !errors.any('search'), invalid: errors.any('search')}" v-on:click="search(true)">Search</button>
         </div>
       </div>
       <div class="find-scrim">
@@ -67,7 +83,7 @@
           </div>
           <template v-if="!searching">
             <div class="find-scrim__results__context">
-              {{ start + 1 }}-{{ upperCount }} of {{ total }} results
+              {{ lowerCount }}-{{ upperCount }} of {{ total }} results
             </div>
             <table>
               <thead>
@@ -87,22 +103,22 @@
                   <td>{{ scrim.region }}</td>
                   <td>{{ scrim.contact }}</td>
                   <td>{{ scrim.list_time | date }}</td>
-                  <td><button style="font-size: .8rem">Contact</button></td>
+                  <td><button class="d2sf-btn" style="font-size: .8rem">Contact</button></td>
                 </tr>
               </tbody>
             </table>
             <div class="find-scrim__results_paging">
-              <div v-if="start > 0" v-on:click="first()">
+              <div v-bind:class="{hidden: start === 0}" v-on:click="first()">
                 <img style="margin-right: -.8rem;" src="static/img/chevron_left.svg">
                 <img src="static/img/chevron_left.svg">
               </div>
-              <div v-if="start > 0" v-on:click="previous()">
+              <div v-bind:class="{hidden: start === 0}" v-on:click="previous()">
                 <img src="static/img/chevron_left.svg">
               </div>
-              <div v-if="start + limit <= total" v-on:click="next()">
+              <div v-bind:class="{hidden: start + limit >= total}" v-on:click="next()">
                 <img src="static/img/chevron_right.svg">
               </div>
-              <div v-if="start + limit <= total" v-on:click="last()">
+              <div v-bind:class="{hidden: start + limit >= total}" v-on:click="last()">
                 <img src="static/img/chevron_right.svg">
                 <img style="margin-left: -.8rem;" src="static/img/chevron_right.svg">
               </div>
@@ -117,28 +133,49 @@
         <div class="list-scrim__fields">
           <div>
             <label class="inp" for="average_mmr">
-              <input type="text" id="average_mmr" placeholder=" ">
+              <input v-model="listTeamInput.average_mmr" v-validate min="0" max="10000" required type="number" id="average_mmr" name="average_mmr" placeholder=" " data-vv-scope="listTeam">
               <span class="label">Average MMR</span>
               <span class="border"></span>
             </label>
+            <div class="input_error">
+              {{ errors.first('listTeam.average_mmr') }}
+            </div>
           </div>
-          <div>
-            <label class="inp" for="region_2">
-              <input type="text" id="region_2" placeholder=" ">
-              <span class="label">Region</span>
-              <span class="border"></span>
-            </label>
+          <div style="position: relative;">
+            <div v-if="listTeamInput.region.length > 0" class="multiselect__field_label">
+              Regions
+            </div>
+            <div>
+              <multiselect 
+               v-model="listTeamInput.region" 
+               :options="regions" 
+               :searchable="false" 
+               :multiple="true" 
+               :close-on-select="false" 
+               :clear-on-select="false" 
+               :preserve-search="true" 
+               :max="4"
+               :allow-empty="false"
+               label="abbr"
+               track-by="name"
+               placeholder="Regions" 
+               >
+              </multiselect>
+            </div>
           </div>
           <div>
             <label class="inp" for="steam_id">
-              <input type="text" id="steam_id" placeholder=" ">
+              <input v-model="listTeamInput.steam_id" v-validate required maxlength="40" type="text" id="steam_id" name="steam_id" placeholder=" " data-vv-scope="listTeam">
               <span class="label">Steam ID</span>
               <span class="border"></span>
             </label>
+            <div class="input_error">
+              {{ errors.first('listTeam.steam_id') }}
+            </div>
           </div>
         </div>
         <div>
-          <button>List My Team</button>
+          <button class="d2sf-btn" v-bind:class="{valid: listTeamValid, invalid: !listTeamValid}" v-on:click="listTeam()">List My Team</button>
         </div>
       </div>
     </div>
