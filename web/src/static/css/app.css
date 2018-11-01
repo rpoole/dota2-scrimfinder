@@ -57,7 +57,7 @@ body {
   align-items: center;
 }
 .header .header__links > div:not(:last-child) {
-  margin-right: 20px;
+  margin-right: 1.25rem;
 }
 
 .find-scrim, .list-scrim, .find-scrim-search_bar {
@@ -165,7 +165,7 @@ body {
   width: 2rem;
 }
 .find-scrim .find-scrim__results_paging > div > img {
-  width: 16px;
+  width: 1rem;
 }
 
 .list-scrim .list-scrim__fields {
@@ -196,13 +196,13 @@ body {
   position: relative;
   margin: auto;
   width: 100%;
-  max-width: 280px;
+  max-width: 17.5rem;
 }
 .inp .label {
   position: absolute;
   top: 0;
   left: 0;
-  font-size: 16px;
+  font-size: 1rem;
   color: #9098a9;
   font-weight: 500;
   transform-origin: 0 0;
@@ -213,7 +213,7 @@ body {
   position: absolute;
   bottom: -0.5rem;
   left: 0;
-  height: 2px;
+  height: 0.125rem;
   width: 100%;
   background: #07f;
   transform: scaleX(0);
@@ -312,6 +312,7 @@ body {
 .multiselect__tag.d2sf_tag {
   padding: 0.3rem 0.5rem;
   margin-bottom: 0px;
+  margin-right: 0.25rem;
   font-size: 0.8rem;
 }
 

@@ -40,7 +40,7 @@ const validRegions = [
     'Japan',
 ];
 
-router.get('/active_scrims', async (ctx) => {
+router.get('/active_scrims/', async (ctx) => {
     let params = ctx.request.query;
 
     let regions = params.regions.split(',');
@@ -58,8 +58,6 @@ router.get('/active_scrims', async (ctx) => {
 
     params.limit = parseInt(params.limit);
     params.start = parseInt(params.start);
-    params.lower_mmr = parseInt(params.lower_mmr);
-    params.upper_mmr = parseInt(params.upper_mmr);
 
     let scrims = await helpers.dbQuery(queries.activeScrims(params), params);
     let total = (await helpers.dbQuery(queries.activeScrimsCount(params), params))[0].count;
@@ -68,6 +66,23 @@ router.get('/active_scrims', async (ctx) => {
         scrims: scrims,
         total: total,
     };
+});
+
+router.post('/list_scrim/', async (ctx) => {
+    let id = (await helpers.dbQuery(queries.createScrim(), {
+        average_mmr: ctx.request.body.average_mmr,
+        contact: ctx.request.body.contact.trim(),
+        team_name: ctx.request.body.team_name.trim(),
+    })).insertId;
+
+    for (let r of ctx.request.body.region) {
+        await helpers.dbQuery(queries.createScrimRegion(), {
+            scrim_id: id,
+            region_name: r.name,
+        });
+    }
+
+    ctx.status = 201
 });
 
 app.use(router.routes());

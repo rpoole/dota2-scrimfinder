@@ -7,10 +7,15 @@ provider:
   region: us-east-1
 
 functions:
-  test:
+  active_scrims:
     handler: src/index.handler
     events:
       - http: 'GET /active_scrims'
+  list_scrim:
+    handler: src/index.handler
+    events:
+      - http: 'POST /list_scrim'
+
 
 
 plugins:

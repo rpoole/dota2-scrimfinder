@@ -135,7 +135,17 @@
       </div>
       <div class="list-scrim">
         <div class="list-scrim__fields">
-          <div>
+          <div style="flex: 1">
+            <label class="inp" for="team_name">
+              <input v-model="listTeamInput.team_name" v-validate required type="text" maxlength="100" id="team_name" name="team_name" placeholder=" " data-vv-scope="listTeam">
+              <span class="label">Team Name</span>
+              <span class="border"></span>
+            </label>
+            <div class="input_error">
+              {{ errors.first('listTeam.team_name') }}
+            </div>
+          </div>
+          <div style="flex: 1">
             <label class="inp" for="average_mmr">
               <input v-model="listTeamInput.average_mmr" v-validate min="0" max="10000" required type="number" id="average_mmr" name="average_mmr" placeholder=" " data-vv-scope="listTeam">
               <span class="label">Average MMR</span>
@@ -145,7 +155,7 @@
               {{ errors.first('listTeam.average_mmr') }}
             </div>
           </div>
-          <div style="position: relative;">
+          <div style="flex: 2; position: relative;">
             <div v-if="listTeamInput.region.length > 0" class="multiselect__field_label">
               Regions
             </div>
@@ -167,14 +177,14 @@
               </multiselect>
             </div>
           </div>
-          <div>
-            <label class="inp" for="steam_id">
-              <input v-model="listTeamInput.steam_id" v-validate required maxlength="40" type="text" id="steam_id" name="steam_id" placeholder=" " data-vv-scope="listTeam">
+          <div style="flex: 1">
+            <label class="inp" for="contact">
+              <input v-model="listTeamInput.contact" v-validate required maxlength="40" type="text" id="contact" name="contact" placeholder=" " data-vv-scope="listTeam">
               <span class="label">Steam ID</span>
               <span class="border"></span>
             </label>
             <div class="input_error">
-              {{ errors.first('listTeam.steam_id') }}
+              {{ errors.first('listTeam.contact') }}
             </div>
           </div>
         </div>

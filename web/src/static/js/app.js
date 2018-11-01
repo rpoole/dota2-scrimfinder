@@ -9,7 +9,7 @@ const ValidationAttrs = {
             lower_mmr: 'low mmr',
             upper_mmr: 'high mmr',
             average_mmr: 'average mmr',
-            steam_id: 'steam ID',
+            contact: 'steam ID',
         },
     },
 };
@@ -30,7 +30,8 @@ var app = new Vue({
             listTeamInput: {
                 average_mmr: '',
                 region: '',
-                steam_id: '',
+                contact: '',
+                team_name: '',
             },
             scrims: [],
             searching: false,
@@ -133,7 +134,15 @@ var app = new Vue({
                 });
         },
         listTeam() {
-            console.log(this.listTeamInput);
+            axios
+            .post(`${host}/list_scrim`, this.listTeamInput)
+            .then( resp => {
+                this.search(true);
+                Object.keys(this.listTeamInput).forEach( k => {
+                    this.listTeamInput[k] = '';
+                });
+                this.$validator.reset();
+            });
         },
     },
     filters: {
