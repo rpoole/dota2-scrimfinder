@@ -133,6 +133,7 @@ var app = new Vue({
                 });
         },
         listTeam() {
+            console.log(this.listTeamInput);
         },
     },
     filters: {

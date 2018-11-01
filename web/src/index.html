@@ -100,7 +100,11 @@
                 <tr v-for="scrim in scrims">
                   <td>{{ scrim.team_name }}</td>
                   <td>{{ scrim.average_mmr }}</td>
-                  <td>{{ scrim.region }}</td>
+                  <td>
+                    <span v-for="c in scrim.codes.split(',')" class="multiselect__tag d2sf_tag">
+                      {{ c }}
+                    </span>
+                  </td>
                   <td>{{ scrim.contact }}</td>
                   <td>{{ scrim.list_time | date }}</td>
                   <td><button class="d2sf-btn" style="font-size: .8rem">Contact</button></td>

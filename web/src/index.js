@@ -6,6 +6,7 @@ const bodyParser = require('koa-bodyparser');
 const app = new Koa();
 const router = new Router();
 const helpers = require('./helpers');
+const queries = require('./queries');
 
 let sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 //await sleep(1000)
@@ -41,6 +42,13 @@ const validRegions = [
 
 router.get('/active_scrims', async (ctx) => {
     let params = ctx.request.query;
+
+    let regions = params.regions.split(',');
+    if (params.regions && !regions.every( r => validRegions.includes(r))) {
+        ctx.status = 500;
+        return;
+    }
+
     if (!params.lower_mmr) {
         params.lower_mmr = 0;
     }
@@ -53,29 +61,8 @@ router.get('/active_scrims', async (ctx) => {
     params.lower_mmr = parseInt(params.lower_mmr);
     params.upper_mmr = parseInt(params.upper_mmr);
 
-    let query = `
-        SELECT * FROM scrims 
-        WHERE average_mmr >= :lower_mmr AND
-        average_mmr <= :upper_mmr
-    `;
-
-    let countQuery = `
-        SELECT count(*) as count FROM scrims 
-        WHERE average_mmr >= :lower_mmr AND
-        average_mmr <= :upper_mmr
-    `;
-
-    let regions = params.regions.split(',');
-
-    if (params.regions && regions.every( r => validRegions.includes(r))) {
-        query += 'AND region in (:regions)';
-        countQuery += 'AND region in (:regions)';
-    }
-
-    query += 'ORDER BY list_time DESC LIMIT :limit OFFSET :start';
-
-    let scrims = await helpers.dbQuery(query, params);
-    let total = (await helpers.dbQuery(countQuery, params))[0].count;
+    let scrims = await helpers.dbQuery(queries.activeScrims(params), params);
+    let total = (await helpers.dbQuery(queries.activeScrimsCount(params), params))[0].count;
 
     ctx.body = {
         scrims: scrims,
