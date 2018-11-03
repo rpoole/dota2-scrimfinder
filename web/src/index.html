@@ -52,12 +52,12 @@
           </div>
         </div>
         <div style="flex: 1.5; position: relative;">
-          <div v-if="searchRegions.length > 0" class="multiselect__field_label">
+          <div v-if="input.region.length > 0" class="multiselect__field_label">
             Regions
           </div>
           <div>
             <multiselect 
-             v-model="searchRegions" 
+             v-model="input.regions" 
              :options="regions" 
              :searchable="false" 
              :multiple="true" 

@@ -25,7 +25,7 @@ var app = new Vue({
             input: {
                 upper_mmr: '',
                 lower_mmr: '',
-                region: '',
+                region: [],
             },
             listTeamInput: {
                 average_mmr: '',
@@ -38,7 +38,6 @@ var app = new Vue({
             start: 0,
             limit: default_limit,
             total: '',
-            searchRegions: [],
             regions: [
                 {name: 'US West', abbr: 'USW'},
                 {name: 'US East', abbr: 'USE'},
@@ -112,19 +111,25 @@ var app = new Vue({
                     params[k] = this.input[k];
                 }
             }
-            params.regions = this.searchRegions.map( m => m.name).join(',');
 
-            let searchParams = new URLSearchParams(params).toString();
+            if (params.region) {
+                params.regions = params.region.map( m => m.name).join(',');
+            }
 
             if (newSearch) {
                 this.start = 0;
                 this.limit = default_limit;
             }
 
+            params.start = this.start;
+            params.limit = this.limit;
+
+            let searchParams = new URLSearchParams(params).toString();
+
             this.searching = true;
 
             axios
-                .get(`${host}/active_scrims?limit=${this.limit}&start=${this.start}&${searchParams}`)
+                .get(`${host}/active_scrims?${searchParams}`)
                 .then (resp => {
                     this.scrims = resp.data.scrims;
                     this.total = resp.data.total;
@@ -134,15 +139,19 @@ var app = new Vue({
                 });
         },
         listTeam() {
+            if(!this.errors.any('listTeam')) {
+                return;
+            }
+
             axios
-            .post(`${host}/list_scrim`, this.listTeamInput)
-            .then( resp => {
-                this.search(true);
-                Object.keys(this.listTeamInput).forEach( k => {
-                    this.listTeamInput[k] = '';
+                .post(`${host}/list_scrim`, this.listTeamInput)
+                .then( resp => {
+                    this.search(true);
+                    Object.keys(this.listTeamInput).forEach( k => {
+                        this.listTeamInput[k] = '';
+                    });
+                    this.$validator.reset();
                 });
-                this.$validator.reset();
-            });
         },
     },
     filters: {

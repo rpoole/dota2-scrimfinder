@@ -2,14 +2,15 @@ const Koa = require('koa');
 const serverless = require('serverless-http');
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
+const Ajv = require('ajv');
 
 const app = new Koa();
 const router = new Router();
 const helpers = require('./helpers');
 const queries = require('./queries');
 
+const ajv = new Ajv({ allErrors: true, coerceTypes: true, useDefaults: true});
 let sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-//await sleep(1000)
 
 app.use(async (ctx, next) => {
     try {
@@ -40,24 +41,53 @@ const validRegions = [
     'Japan',
 ];
 
+const validate_active_scrims = ajv.compile({
+    type: 'object',
+    required: ['limit', 'start'],
+    properties: { 
+        limit: { 
+            type: 'number',
+            minimum: 0
+        },
+        start: {
+            type: 'number',
+            minimum: 0
+        },
+        regions: { 
+            anyOf: [
+                {type: 'array', contains: { type: 'string' }},
+                {type: 'string', maxlength: 0},
+            ],
+        },
+        upper_mmr: {
+            type: 'number',
+            minimum: 0,
+            maximum: 10000,
+            default: 10000,
+        },
+        lower_mmr: {
+            type: 'number',
+            minimum: 0,
+            maximum: 10000,
+            default: 0,
+        }
+    }
+});
+
 router.get('/active_scrims/', async (ctx) => {
     let params = ctx.request.query;
+    validate_active_scrims(params);
+    if (validate_active_scrims.errors) {
+        ctx.status = 500;
+        ctx.body = validate_active_scrims.errors;
+        return;
+    }
 
     let regions = params.regions.split(',');
     if (params.regions && !regions.every( r => validRegions.includes(r))) {
         ctx.status = 500;
         return;
     }
-
-    if (!params.lower_mmr) {
-        params.lower_mmr = 0;
-    }
-    if (!params.upper_mmr) {
-        params.upper_mmr = 10000;
-    }
-
-    params.limit = parseInt(params.limit);
-    params.start = parseInt(params.start);
 
     let scrims = await helpers.dbQuery(queries.activeScrims(params), params);
     let total = (await helpers.dbQuery(queries.activeScrimsCount(params), params))[0].count;
@@ -68,7 +98,14 @@ router.get('/active_scrims/', async (ctx) => {
     };
 });
 
+
+
 router.post('/list_scrim/', async (ctx) => {
+    if (parseInt(ctx.request.body.average_mmr) >= 10000) {
+        ctx.status = 500;
+        return;
+    }
+
     let id = (await helpers.dbQuery(queries.createScrim(), {
         average_mmr: ctx.request.body.average_mmr,
         contact: ctx.request.body.contact.trim(),
