@@ -20,5 +20,6 @@ services:
       - ./web/src:/web/src
     ports:
       - "3000:3000"
+      - "7800:7800"
     depends_on:
       - db

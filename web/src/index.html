@@ -22,8 +22,6 @@
       <div class="header">
         <img src="./static/img/logo.svg">
         <div class="header__links">
-          <div>Login</div>
-          <div>Sign Up</div>
         </div>
       </div>
 
@@ -52,7 +50,7 @@
           </div>
         </div>
         <div style="flex: 1.5; position: relative;">
-          <div v-if="input.region.length > 0" class="multiselect__field_label">
+          <div v-if="input.regions.length > 0" class="multiselect__field_label">
             Regions
           </div>
           <div>
@@ -91,8 +89,8 @@
                   <th>Team Name</th>
                   <th>Average MMR</th>
                   <th>Region</th>
-                  <th>Contact</th>
                   <th>List Time</th>
+                  <th>Contact</th>
                   <th></th>
                 </tr>
               </thead>
@@ -105,8 +103,8 @@
                       {{ c }}
                     </span>
                   </td>
-                  <td>{{ scrim.contact }}</td>
                   <td>{{ scrim.list_time | date }}</td>
+                  <td>{{ scrim.contact }}</td>
                   <td><button class="d2sf-btn" style="font-size: .8rem">Contact</button></td>
                 </tr>
               </tbody>
@@ -130,68 +128,88 @@
           </template>
         </div>
       </div>
-      <div class="list-scrim-header">
-        List Your Team
-      </div>
-      <div class="list-scrim">
-        <div class="list-scrim__fields">
-          <div style="flex: 1">
-            <label class="inp" for="team_name">
-              <input v-model="listTeamInput.team_name" v-validate required type="text" maxlength="100" id="team_name" name="team_name" placeholder=" " data-vv-scope="listTeam">
-              <span class="label">Team Name</span>
-              <span class="border"></span>
-            </label>
-            <div class="input_error">
-              {{ errors.first('listTeam.team_name') }}
+      <template v-if="token.length === 0">
+        <div class="list-scrim-header">
+          List Your Team
+        </div>
+        <div class="list-scrim">
+          <div class="list-scrim__fields">
+            <div style="flex: 1">
+              <label class="inp" for="team_name">
+                <input v-model="listTeamInput.team_name" v-validate required type="text" minlength="2" maxlength="100" id="team_name" name="team_name" placeholder=" " data-vv-scope="listTeam">
+                <span class="label">Team Name</span>
+                <span class="border"></span>
+              </label>
+              <div class="input_error">
+                {{ errors.first('listTeam.team_name') }}
+              </div>
+            </div>
+            <div style="flex: 1">
+              <label class="inp" for="average_mmr">
+                <input v-model="listTeamInput.average_mmr" v-validate min="0" max="10000" required type="number" id="average_mmr" name="average_mmr" placeholder=" " data-vv-scope="listTeam">
+                <span class="label">Average MMR</span>
+                <span class="border"></span>
+              </label>
+              <div class="input_error">
+                {{ errors.first('listTeam.average_mmr') }}
+              </div>
+            </div>
+            <div style="flex: 2; position: relative;">
+              <div v-if="listTeamInput.region.length > 0" class="multiselect__field_label">
+                Regions
+              </div>
+              <div>
+                <multiselect 
+                 v-model="listTeamInput.region" 
+                 :options="regions" 
+                 :searchable="false" 
+                 :multiple="true" 
+                 :close-on-select="false" 
+                 :clear-on-select="false" 
+                 :preserve-search="true" 
+                 :max="4"
+                 :allow-empty="false"
+                 label="abbr"
+                 track-by="name"
+                 placeholder="Regions" 
+                 >
+                </multiselect>
+              </div>
+            </div>
+            <div style="flex: 1">
+              <label class="inp" for="contact">
+                <input v-model="listTeamInput.contact" v-validate required minlength="2" maxlength="40" type="text" id="contact" name="contact" placeholder=" " data-vv-scope="listTeam">
+                <span class="label">Steam ID</span>
+                <span class="border"></span>
+              </label>
+              <div class="input_error">
+                {{ errors.first('listTeam.contact') }}
+              </div>
             </div>
           </div>
-          <div style="flex: 1">
-            <label class="inp" for="average_mmr">
-              <input v-model="listTeamInput.average_mmr" v-validate min="0" max="10000" required type="number" id="average_mmr" name="average_mmr" placeholder=" " data-vv-scope="listTeam">
-              <span class="label">Average MMR</span>
-              <span class="border"></span>
-            </label>
-            <div class="input_error">
-              {{ errors.first('listTeam.average_mmr') }}
-            </div>
-          </div>
-          <div style="flex: 2; position: relative;">
-            <div v-if="listTeamInput.region.length > 0" class="multiselect__field_label">
-              Regions
-            </div>
-            <div>
-              <multiselect 
-               v-model="listTeamInput.region" 
-               :options="regions" 
-               :searchable="false" 
-               :multiple="true" 
-               :close-on-select="false" 
-               :clear-on-select="false" 
-               :preserve-search="true" 
-               :max="4"
-               :allow-empty="false"
-               label="abbr"
-               track-by="name"
-               placeholder="Regions" 
-               >
-              </multiselect>
-            </div>
-          </div>
-          <div style="flex: 1">
-            <label class="inp" for="contact">
-              <input v-model="listTeamInput.contact" v-validate required maxlength="40" type="text" id="contact" name="contact" placeholder=" " data-vv-scope="listTeam">
-              <span class="label">Steam ID</span>
-              <span class="border"></span>
-            </label>
-            <div class="input_error">
-              {{ errors.first('listTeam.contact') }}
-            </div>
+          <div>
+            <button class="d2sf-btn" v-bind:class="{valid: listTeamValid, invalid: !listTeamValid}" v-on:click="listTeam()">List My Team</button>
           </div>
         </div>
-        <div>
-          <button class="d2sf-btn" v-bind:class="{valid: listTeamValid, invalid: !listTeamValid}" v-on:click="listTeam()">List My Team</button>
+      </template>
+      <template>
+      <!--<template v-if="token.length > 0">-->
+        <div class="manage-scrim-header">
+          Your Scrim
         </div>
-      </div>
+        <div class="manage-scrim">
+          <div>
+            <ul>
+              <li>Your scrim is now listed. You must keep this page open (and remain connected to the internet) to keep your scrim listing. If you lose your listing you can make another.</li>
+              <li>Your scrim will be active for 4 hours. After that, you will have to make another scrim.</li>
+              <li>If you have found a scrim, you can close this page, or remove your scrim using the button below. If you do not, you may still recieve steam messages from other users.</li>
+            </ul>
+          </div>
+          <div>
+            <button class="d2sf-btn" v-on:click="deleteScrim()">Remove Scrim</button>
+          </div>
+        </div>
+      </template>
     </div>
   </body>
 </html>

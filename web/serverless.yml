@@ -15,6 +15,10 @@ functions:
     handler: src/index.handler
     events:
       - http: 'POST /list_scrim'
+  renew_scrim_key:
+    handler: src/index.handler
+    events:
+      - http: 'POST /renew_scrim_key'
 
 
 

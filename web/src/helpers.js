@@ -13,6 +13,16 @@ async function dbQuery(queryStr, values) {
         database : 'dota2_scrimfinder'
     });
 
+    // log queries to console
+    connection.on('enqueue', function(sequence) {
+        if ('Query' === sequence.constructor.name) {
+            console.log('--------------QUERY START--------------')
+            console.log(sequence.sql);
+            console.log('--------------QUERY END--------------')
+        }
+    });
+
+
     // taken from node mysql page
     connection.config.queryFormat = function (query, values) {
         if (!values) return query;

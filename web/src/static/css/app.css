@@ -60,7 +60,7 @@ body {
   margin-right: 1.25rem;
 }
 
-.find-scrim, .list-scrim, .find-scrim-search_bar {
+.find-scrim, .list-scrim, .find-scrim-search_bar, .manage-scrim {
   padding: 1rem;
   padding-bottom: 1.5rem;
   padding-top: 2rem;
@@ -71,7 +71,7 @@ body {
   box-shadow: 0 3px 6px -6px black;
 }
 
-.find-scrim-header, .list-scrim-header {
+.find-scrim-header, .list-scrim-header, .manage-scrim-header {
   margin-top: 3rem;
   margin-bottom: 0.4rem;
   margin-left: 0.3rem;
@@ -131,6 +131,9 @@ body {
   background-repeat: no-repeat;
   background-size: 55% 55%;
   background-position: -17% 60%;
+}
+.find-scrim .find-scrim__results button:hover {
+  background-image: url(../img/message_white.svg);
 }
 .find-scrim .find-scrim__results table {
   width: 100%;

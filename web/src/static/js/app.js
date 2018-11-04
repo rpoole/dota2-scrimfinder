@@ -1,4 +1,5 @@
 'use strict';
+const worker = new Worker('worker.js');
 
 const host = 'http://localhost:3000';
 const default_limit = 10;
@@ -25,7 +26,7 @@ var app = new Vue({
             input: {
                 upper_mmr: '',
                 lower_mmr: '',
-                region: [],
+                regions: '',
             },
             listTeamInput: {
                 average_mmr: '',
@@ -37,6 +38,7 @@ var app = new Vue({
             searching: false,
             start: 0,
             limit: default_limit,
+            token: '',
             total: '',
             regions: [
                 {name: 'US West', abbr: 'USW'},
@@ -112,8 +114,8 @@ var app = new Vue({
                 }
             }
 
-            if (params.region) {
-                params.regions = params.region.map( m => m.name).join(',');
+            if (params.regions) {
+                params.regions = params.regions.map( m => m.name).join(',');
             }
 
             if (newSearch) {
@@ -139,7 +141,7 @@ var app = new Vue({
                 });
         },
         listTeam() {
-            if(!this.errors.any('listTeam')) {
+            if(this.errors.any('listTeam')) {
                 return;
             }
 
@@ -151,6 +153,10 @@ var app = new Vue({
                         this.listTeamInput[k] = '';
                     });
                     this.$validator.reset();
+
+                    this.token = resp.data.token;
+
+                    worker.postMessage({token: this.token});
                 });
         },
     },
@@ -180,3 +186,13 @@ function formatDate(date) {
 
     return month + ' ' + date.getDate() + ' ' + date.getFullYear() + ' ' + hours + ':' + date.getMinutes() + ' ' + ampm;
 }
+
+
+// Setup an event listener that will handle messages received from the worker.
+worker.addEventListener('message', function(e) {
+  // Log the workers message.
+  console.log(e.data);
+}, false);
+
+worker.postMessage('Hello World');
+worker.postMessage('Hello Worlds');

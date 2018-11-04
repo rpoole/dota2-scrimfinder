@@ -50,9 +50,23 @@ function createScrimRegion() {
     `;
 }
 
+function createScrimKey() {
+    return `
+        INSERT INTO scrim_keys (scrim_id, token, expires) values (:scrim_id, :token, now() + INTERVAL 5 MINUTE)
+    `;
+}
+
+function renewScrimKey() {
+    return `
+        UPDATE scrim_keys set expires = now() + INTERVAL 5 MINUTE where token = :token
+    `;
+}
+
 module.exports = {
-    activeScrims: activeScrims,
-    activeScrimsCount: activeScrimsCount,
-    createScrim: createScrim,
-    createScrimRegion: createScrimRegion,
+    activeScrims,
+    activeScrimsCount,
+    createScrim,
+    createScrimRegion,
+    createScrimKey,
+    renewScrimKey,
 };
