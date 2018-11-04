@@ -81,7 +81,6 @@ const validate_renew_scrim_key = ajv.compile({
     }
 });
 
-
 module.exports = {
     validate_active_scrims,
     validate_list_scrim,

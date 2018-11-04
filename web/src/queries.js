@@ -62,6 +62,18 @@ function renewScrimKey() {
     `;
 }
 
+function getScrimKey() {
+    return `
+        SELECT * FROM scrim_keys where token = :token
+    `;
+}
+
+function deleteScrim() {
+    return `
+        DELETE FROM scrims where id = :id
+    `;
+}
+
 module.exports = {
     activeScrims,
     activeScrimsCount,
@@ -69,4 +81,6 @@ module.exports = {
     createScrimRegion,
     createScrimKey,
     renewScrimKey,
+    getScrimKey,
+    deleteScrim,
 };

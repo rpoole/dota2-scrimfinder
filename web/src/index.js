@@ -46,8 +46,11 @@ app.use(async (ctx, next) => {
     let params;
     if (ctx.request.method === 'GET') {
         params = ctx.request.query;
-    } else {
+    } else if (ctx.request.method === 'POST'){
         params = ctx.request.body;
+    } else {
+        await next();
+        return;
     }
 
     let path = `validate_${ctx.request.url.split('?')[0].substring(1)}`;
@@ -111,6 +114,7 @@ router.post('/list_scrim/', async (ctx) => {
 
     ctx.body = {
         token: token,
+        scrim_id: id,
     };
 
     ctx.status = 201
@@ -124,6 +128,25 @@ router.post('/renew_scrim_key', async(ctx) => {
     });
 
     ctx.status = 200;
+});
+
+router.delete('/remove_scrim/:token', async (ctx) => {
+    let params = ctx.params;
+
+    let scrimKey = (await helpers.dbQuery(queries.getScrimKey(), {
+        token: params.token,
+    }))[0];
+
+    if (!scrimKey) {
+        ctx.status = 400;
+        return;
+    }
+
+    await helpers.dbQuery(queries.deleteScrim(), {
+        id: scrimKey.scrim_id,
+    });
+
+    ctx.status = 204;
 });
 
 app.use(router.routes());

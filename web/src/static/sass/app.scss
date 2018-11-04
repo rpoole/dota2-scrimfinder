@@ -144,6 +144,10 @@ body {
                 padding: .5rem .9rem;
             }
 
+            tr.listed-scrim > td {
+                background-color: lighten($green, 40%);
+            }
+
             tbody tr {
                 background-color: #eee;
 

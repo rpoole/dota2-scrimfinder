@@ -146,6 +146,9 @@ body {
 .find-scrim .find-scrim__results table td {
   padding: 0.5rem 0.9rem;
 }
+.find-scrim .find-scrim__results table tr.listed-scrim > td {
+  background-color: #eef4e1;
+}
 .find-scrim .find-scrim__results table tbody tr {
   background-color: #eee;
 }

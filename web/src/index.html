@@ -95,7 +95,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="scrim in scrims">
+                <tr v-for="scrim in scrims" v-bind:class="{'listed-scrim': scrim.id === activeScrimId}">
                   <td>{{ scrim.team_name }}</td>
                   <td>{{ scrim.average_mmr }}</td>
                   <td>
@@ -105,7 +105,9 @@
                   </td>
                   <td>{{ scrim.list_time | date }}</td>
                   <td>{{ scrim.contact }}</td>
-                  <td><button class="d2sf-btn" style="font-size: .8rem">Contact</button></td>
+                  <td>
+                    <button v-if="scrim.id !== activeScrimId" class="d2sf-btn" style="font-size: .8rem">Contact</button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -202,11 +204,11 @@
             <ul>
               <li>Your scrim is now listed. You must keep this page open (and remain connected to the internet) to keep your scrim listing. If you lose your listing you can make another.</li>
               <li>Your scrim will be active for 4 hours. After that, you will have to make another scrim.</li>
-              <li>If you have found a scrim, you can close this page, or remove your scrim using the button below. If you do not, you may still recieve steam messages from other users.</li>
+              <li>If you have found a scrim you can close this page or remove your scrim using the button below. If you do not, you may still recieve steam messages from other users.</li>
             </ul>
           </div>
           <div>
-            <button class="d2sf-btn" v-on:click="deleteScrim()">Remove Scrim</button>
+            <button class="d2sf-btn" v-on:click="removeScrim()">Remove Scrim</button>
           </div>
         </div>
       </template>

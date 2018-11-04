@@ -19,7 +19,10 @@ functions:
     handler: src/index.handler
     events:
       - http: 'POST /renew_scrim_key'
-
+  remove_scrim:
+    handler: src/index.handler
+    events:
+      - http: 'DELETE /remove_scrim/{token}'
 
 
 plugins:

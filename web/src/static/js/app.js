@@ -39,6 +39,7 @@ var app = new Vue({
             start: 0,
             limit: default_limit,
             token: '',
+            activeScrimId: '',
             total: '',
             regions: [
                 {name: 'US West', abbr: 'USW'},
@@ -155,10 +156,24 @@ var app = new Vue({
                     this.$validator.reset();
 
                     this.token = resp.data.token;
+                    this.activeScrimId = resp.data.scrim_id;
 
                     worker.postMessage({token: this.token});
                 });
         },
+        removeScrim() {
+            if (!this.token) {
+                return;
+            }
+
+            axios
+                .delete(`${host}/remove_scrim/${this.token}`)
+                .then( resp => {
+                    this.token = '';
+                    this.activeScrimId = '';
+                    this.search(true);
+                });
+        }
     },
     filters: {
         date: function (value) {
