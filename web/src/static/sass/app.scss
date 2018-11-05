@@ -25,6 +25,44 @@ body {
     margin-right: auto;
 }
 
+.d2sf-btn {
+    padding: .3rem .9rem;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: #aaa;
+    color: #aaa;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+
+    &:focus {
+        outline: 0;
+    }
+
+    &.valid {
+        color: $green;
+        border-color: $green;
+    }
+
+    &.invalid {
+        opacity: .2;
+        cursor: default;
+    }
+
+    &:hover:not(.invalid) {
+        color: white;
+        background-color: #aaa;
+        border-color: darken(#aaa, 10%);
+
+        &.valid {
+            background-color: $green;
+            border-color: darken($green, 10%);
+        }
+    }
+}
+
+
 .header {
     display: flex;
     align-items: center;
@@ -41,7 +79,7 @@ body {
     }
 }
 
-.find-scrim, .list-scrim, .find-scrim-search_bar, .manage-scrim {
+.find-scrim, .list-scrim, .find-scrim-search_bar, .manage-scrim-info, .manage-scrim {
     padding: 1rem;
     padding-bottom: 1.5rem;
     padding-top: 2rem;
@@ -61,6 +99,7 @@ body {
 
     display: flex;
     align-items: center;
+    font-family: 'Righteous', cursive;
 }
 
 .input_error {
@@ -183,25 +222,36 @@ body {
 }
 
 .list-scrim {
-    button {
-        padding-left: 2rem;
-        background-image: url(../img/plus_grey.svg);
-        background-repeat: no-repeat;
-        background-size: 55% 55%;
-        background-position: -38% 48%;
-
-        &.valid {
-            background-image: url(../img/plus_green.svg);
-        }
-
-        &:hover:not(.invalid) {
-            background-image: url(../img/plus_white.svg);
-        }
-    }
-
     .list-scrim__fields > div {
         flex: 1;
         margin-right: 4rem;
+    }
+}
+
+.manage-scrim-info {
+    padding-top: 1rem;
+    color: #9098a9;
+
+    .manage-scrim-info_text {
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .manage-scrim-info_actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    button {
+        border-color: $logo-red;
+        color: $logo-red;
+
+        &:hover:not(.invalid) {
+            color: white;
+            background-color: $logo-red;
+            border-color: darken($logo-red, 10%);
+        }
     }
 }
 
@@ -266,42 +316,6 @@ body {
 
         &:focus + span + .border {
             transform: scaleX(1);
-        }
-    }
-}
-
-.d2sf-btn {
-    padding: .3rem .9rem;
-    border-width: 2px;
-    border-radius: 5px;
-    border-color: #aaa;
-    color: #aaa;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-
-    &:focus {
-        outline: 0;
-    }
-
-    &.valid {
-        color: $green;
-        border-color: $green;
-    }
-
-    &.invalid {
-        opacity: .2;
-    }
-
-    &:hover:not(.invalid) {
-        color: white;
-        background-color: #aaa;
-        border-color: darken(#aaa, 10%);
-
-        &.valid {
-            background-color: $green;
-            border-color: darken($green, 10%);
         }
     }
 }

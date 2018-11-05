@@ -7,7 +7,7 @@
     <title></title>
 
     <!-- Included CSS Files -->
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Righteous" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
     <link type="text/css" rel="stylesheet" href="static/css/app.css">
 
@@ -194,21 +194,20 @@
           </div>
         </div>
       </template>
-      <template>
-      <!--<template v-if="token.length > 0">-->
+      <template v-if="token.length > 0">
         <div class="manage-scrim-header">
           Your Scrim
         </div>
-        <div class="manage-scrim">
-          <div>
+        <div class="manage-scrim-info">
+          <div class="manage-scrim-info_text">
             <ul>
               <li>Your scrim is now listed. You must keep this page open (and remain connected to the internet) to keep your scrim listing. If you lose your listing you can make another.</li>
               <li>Your scrim will be active for 4 hours. After that, you will have to make another scrim.</li>
               <li>If you have found a scrim you can close this page or remove your scrim using the button below. If you do not, you may still recieve steam messages from other users.</li>
             </ul>
           </div>
-          <div>
-            <button class="d2sf-btn" v-on:click="removeScrim()">Remove Scrim</button>
+          <div class="manage-scrim-info_actions">
+            <button class="d2sf-btn" v-on:click="removeScrim()">Remove My Scrim</button>
           </div>
         </div>
       </template>
