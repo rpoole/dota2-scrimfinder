@@ -74,6 +74,12 @@ function deleteScrim() {
     `;
 }
 
+function deleteExpiredScrims() {
+	return `
+		DELETE FROM scrim_keys WHERE expires <= NOW();
+	`;
+}
+
 module.exports = {
     activeScrims,
     activeScrimsCount,
@@ -83,4 +89,5 @@ module.exports = {
     renewScrimKey,
     getScrimKey,
     deleteScrim,
+		deleteExpiredScrims,
 };

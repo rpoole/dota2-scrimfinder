@@ -160,13 +160,13 @@ body {
 }
 .find-scrim .find-scrim__results button {
   padding-left: 2rem;
-  background-image: url(../img/message_grey.svg);
+  background-image: url(../img/clipboard_grey.svg);
   background-repeat: no-repeat;
   background-size: 55% 55%;
   background-position: -17% 60%;
 }
 .find-scrim .find-scrim__results button:hover {
-  background-image: url(../img/message_white.svg);
+  background-image: url(../img/clipboard_white.svg);
 }
 .find-scrim .find-scrim__results table {
   width: 100%;
@@ -329,6 +329,14 @@ body {
   margin-bottom: 0px;
   margin-right: 0.25rem;
   font-size: 0.8rem;
+}
+
+.toast-container {
+  min-width: 300px;
+}
+
+.toast-body {
+  justify-content: center !important;
 }
 
 /*# sourceMappingURL=app.css.map */

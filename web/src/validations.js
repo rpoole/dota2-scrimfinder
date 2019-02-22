@@ -43,7 +43,7 @@ const validate_list_scrim = ajv.compile({
         contact: {
             type: 'string',
             minLength: 2,
-            maxLength: 40,
+            maxLength: 100,
         },
         region: { 
             type: 'array',

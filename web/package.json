@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "ajv": "^6.5.4",
+    "ajv": "^6.5.5",
     "koa": "^2.6.1",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
@@ -12,7 +12,8 @@
     "serverless-http": "^1.8.0"
   },
   "devDependencies": {
-    "serverless-offline": "^3.30.0"
+    "serverless-offline": "^3.30.0",
+    "serverless-s3-sync": "^1.7.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

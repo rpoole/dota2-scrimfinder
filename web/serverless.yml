@@ -3,31 +3,96 @@ service: dota2-scrimfinder
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   region: us-east-1
+  vpc:
+    securityGroupIds:
+      - sg-03fcd818f6707f60b
+    subnetIds:
+      - subnet-049eed4e3889f356d
+      - subnet-040c4ce3436924acf
+      - subnet-083fef999389dc477
 
 functions:
   active_scrims:
     handler: src/index.handler
     events:
-      - http: 'GET /active_scrims'
+      - http:
+          method: get
+          path: /active_scrims
+          cors: true
+    reservedConcurrency: 5
   list_scrim:
     handler: src/index.handler
     events:
-      - http: 'POST /list_scrim'
+      - http:
+          method: post
+          path: /list_scrim
+          cors: true
+    reservedConcurrency: 5
   renew_scrim_key:
     handler: src/index.handler
     events:
-      - http: 'POST /renew_scrim_key'
+      - http:
+          method: post
+          path: /renew_scrim_key
+          cors: true
+    reservedConcurrency: 5
   remove_scrim:
     handler: src/index.handler
     events:
-      - http: 'DELETE /remove_scrim/{token}'
+      - http:
+          method: delete
+          path: /remove_scrim/{token}
+          cors: true
+    reservedConcurrency: 5
+  reap_scrims:
+    handler: src/index.reap_scrims
+    # AWS Scheduler is done using UTC
+    events:
+      - schedule: cron(0 13 1 * ? *)
+      - schedule: cron(0 13 ? * MON *)
 
+resources:
+  Resources:
+    StaticSite:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:custom.siteName}
+        WebsiteConfiguration:
+          IndexDocument: index.html
+
+    StaticSiteS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: StaticSite
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+              - s3:GetObject
+              Resource:
+                Fn::Join: [
+                  "", [
+                    "arn:aws:s3:::",
+                    {
+                      "Ref": "StaticSite"
+                    },
+                    "/*"
+                  ]
+                ]
 
 plugins:
   - serverless-offline
-
+  - serverless-s3-sync
 custom:
+  siteName: 'd2sf'
+  s3Sync:
+    - bucketName: ${self:custom.siteName}
+      localDir: src/static
   serverless-offline:
     host: 0.0.0.0

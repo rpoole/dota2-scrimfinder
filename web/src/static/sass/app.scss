@@ -160,13 +160,13 @@ body {
 
         button {
             padding-left: 2rem;
-            background-image: url(../img/message_grey.svg);
+            background-image: url(../img/clipboard_grey.svg);
             background-repeat: no-repeat;
             background-size: 55% 55%;
             background-position: -17% 60%;
 
             &:hover {
-                background-image: url(../img/message_white.svg);
+                background-image: url(../img/clipboard_white.svg);
             }
         }
 
@@ -358,4 +358,14 @@ body {
     margin-bottom: 0px;
     margin-right: .25rem;
     font-size: .8rem;
+}
+
+// for toasted vue
+.toast-container {
+    min-width: 300px;
+}
+
+.toast-body {
+    // plugin applies this class with less specificity than base class...
+    justify-content: center !important;
 }

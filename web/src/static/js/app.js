@@ -1,6 +1,6 @@
 'use strict';
-const worker = new Worker('worker.js');
 
+const worker = new Worker('js/worker.js');
 const host = 'http://localhost:3000';
 const default_limit = 10;
 
@@ -11,15 +11,41 @@ const ValidationAttrs = {
             upper_mmr: 'high mmr',
             average_mmr: 'average mmr',
             contact: 'steam ID',
+						team_name: 'team name',
         },
     },
 };
 VeeValidate.Validator.localize(ValidationAttrs);
 Vue.use(VeeValidate);
-
+Vue.use(Toasted, {
+	theme: 'toasted-primary',
+	duration: 2000,
+	position: 'top-center', 
+	containerClass: 'toast-container',
+	className:'toast-body',
+});
 Vue.component('multiselect', VueMultiselect.default)
 
-var app = new Vue({
+VeeValidate.Validator.extend('steamURL', {
+	getMessage: () => 'You must include a link to your steam community page. Example: https://www.steamcommunity.com/id/your_id',
+	validate: value => {
+        const regex = new RegExp('https://www.steamcommunity.com/id/.+');
+		return regex.test(value);
+	},
+});
+
+axios.interceptors.response.use(response => {
+	return response;
+}, error => {
+	if (error.response.status >= 500) {
+		app.$toasted.error('Oops, something went wrong.', {
+			duration: 4000,
+		})
+	}
+	return Promise.reject(error);
+});
+
+let app = new Vue({
     el: '#app',
     data: function() {
         return {
@@ -87,6 +113,14 @@ var app = new Vue({
         }
     },
     methods: {
+        copy(event) {
+            let range = document.createRange();
+            range.selectNode(event.target.parentElement.previousElementSibling);
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            window.getSelection().removeRange(range);
+            this.$toasted.success('Copied!')
+        },
         first() {
             this.start = 0;
             this.search();
@@ -208,6 +242,3 @@ worker.addEventListener('message', function(e) {
   // Log the workers message.
   console.log(e.data);
 }, false);
-
-worker.postMessage('Hello World');
-worker.postMessage('Hello Worlds');

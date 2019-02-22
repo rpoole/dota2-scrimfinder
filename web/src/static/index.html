@@ -9,18 +9,19 @@
     <!-- Included CSS Files -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Righteous" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
-    <link type="text/css" rel="stylesheet" href="static/css/app.css">
+    <link type="text/css" rel="stylesheet" href="css/app.css">
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vee-validate@latest/dist/vee-validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vee-validate@2.1.5/dist/vee-validate.js"></script>
     <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+    <script src="https://unpkg.com/vue-toasted"></script>
   </head>
 
   <body>
     <div id="app">
       <div class="header">
-        <img src="./static/img/logo.svg">
+        <img src="img/logo.svg">
         <div class="header__links">
         </div>
       </div>
@@ -31,22 +32,22 @@
       <div class="find-scrim-search_bar">
         <div style="flex: 1">
           <label class="inp" for="lower_mmr">
-            <input v-model="input.lower_mmr" v-validate type="number" min=0 max=10000 id="lower_mmr" name="lower_mmr" placeholder=" " data-vv-scope="search">
+            <input v-model="input.lower_mmr" v-validate="'min_value:0|max_value:10000'" type="number" id="lower_mmr" name="lower_mmr" placeholder=" " data-vv-scope="search">
             <span class="label">Low MMR</span>
             <span class="border"></span>
           </label>
           <div class="input_error">
-            {{ errors.first('lower_mmr') }}
+            {{ errors.first('search.lower_mmr') }}
           </div>
         </div>
         <div style="flex: 1">
           <label class="inp" for="upper_mmr">
-            <input v-model="input.upper_mmr" v-validate min=0 max=10000 type="number" id="upper_mmr" name="upper_mmr" placeholder=" " data-vv-scope="search">
+            <input v-model="input.upper_mmr" v-validate="'min_value:0|max_value:10000'" type="number" id="upper_mmr" name="upper_mmr" placeholder=" " data-vv-scope="search">
             <span class="label">High MMR</span>
             <span class="border"></span>
           </label>
           <div class="input_error">
-            {{ errors.first('upper_mmr') }}
+            {{ errors.first('search.upper_mmr') }}
           </div>
         </div>
         <div style="flex: 1.5; position: relative;">
@@ -89,8 +90,8 @@
                   <th>Team Name</th>
                   <th>Average MMR</th>
                   <th>Region</th>
-                  <th>List Time</th>
-                  <th>Contact</th>
+                  <th>Listed At</th>
+                  <th>Steam Account URL</th>
                   <th></th>
                 </tr>
               </thead>
@@ -104,27 +105,29 @@
                     </span>
                   </td>
                   <td>{{ scrim.list_time | date }}</td>
-                  <td>{{ scrim.contact }}</td>
                   <td>
-                    <button v-if="scrim.id !== activeScrimId" class="d2sf-btn" style="font-size: .8rem">Contact</button>
+                    {{ scrim.contact }}
+                  </td>
+                  <td>
+                    <button v-if="scrim.id !== activeScrimId" v-on:click="copy" class="d2sf-btn" style="font-size: .8rem">Copy</button>
                   </td>
                 </tr>
               </tbody>
             </table>
             <div class="find-scrim__results_paging">
               <div v-bind:class="{hidden: start === 0}" v-on:click="first()">
-                <img style="margin-right: -.8rem;" src="static/img/chevron_left.svg">
-                <img src="static/img/chevron_left.svg">
+                <img style="margin-right: -.8rem;" src="img/chevron_left.svg">
+                <img src="img/chevron_left.svg">
               </div>
               <div v-bind:class="{hidden: start === 0}" v-on:click="previous()">
-                <img src="static/img/chevron_left.svg">
+                <img src="img/chevron_left.svg">
               </div>
               <div v-bind:class="{hidden: start + limit >= total}" v-on:click="next()">
-                <img src="static/img/chevron_right.svg">
+                <img src="img/chevron_right.svg">
               </div>
               <div v-bind:class="{hidden: start + limit >= total}" v-on:click="last()">
-                <img src="static/img/chevron_right.svg">
-                <img style="margin-left: -.8rem;" src="static/img/chevron_right.svg">
+                <img src="img/chevron_right.svg">
+                <img style="margin-left: -.8rem;" src="img/chevron_right.svg">
               </div>
             </div>
           </template>
@@ -138,7 +141,7 @@
           <div class="list-scrim__fields">
             <div style="flex: 1">
               <label class="inp" for="team_name">
-                <input v-model="listTeamInput.team_name" v-validate required type="text" minlength="2" maxlength="100" id="team_name" name="team_name" placeholder=" " data-vv-scope="listTeam">
+                <input v-model="listTeamInput.team_name" v-validate="'required|min:2|max:100'" type="text" id="team_name" name="team_name" placeholder=" " data-vv-scope="listTeam">
                 <span class="label">Team Name</span>
                 <span class="border"></span>
               </label>
@@ -148,7 +151,7 @@
             </div>
             <div style="flex: 1">
               <label class="inp" for="average_mmr">
-                <input v-model="listTeamInput.average_mmr" v-validate min="0" max="10000" required type="number" id="average_mmr" name="average_mmr" placeholder=" " data-vv-scope="listTeam">
+                <input v-model="listTeamInput.average_mmr" v-validate="'required|min_value:0|max_value:10000'" type="number" id="average_mmr" name="average_mmr" placeholder=" " data-vv-scope="listTeam">
                 <span class="label">Average MMR</span>
                 <span class="border"></span>
               </label>
@@ -178,10 +181,12 @@
                 </multiselect>
               </div>
             </div>
+          </div>
+          <div class="list-scrim__fields">
             <div style="flex: 1">
               <label class="inp" for="contact">
-                <input v-model="listTeamInput.contact" v-validate required minlength="2" maxlength="40" type="text" id="contact" name="contact" placeholder=" " data-vv-scope="listTeam">
-                <span class="label">Steam ID</span>
+                <input v-model="listTeamInput.contact" v-validate="'required|min:2|max:100|steamURL'" type="text" id="contact" name="contact" placeholder=" " data-vv-scope="listTeam">
+                <span class="label">Steam Account URL</span>
                 <span class="border"></span>
               </label>
               <div class="input_error">
@@ -214,4 +219,4 @@
     </div>
   </body>
 </html>
-<script src="static/js/app.js"></script>
+<script src="js/app.js"></script>

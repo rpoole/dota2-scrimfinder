@@ -23,6 +23,13 @@ app.use(async (ctx, next) => {
     }
 });
 
+app.use(async (ctx, next) => {
+  ctx.set('Access-Control-Allow-Origin', '*');
+  ctx.set('Access-Control-Allow-Credentials', true);
+
+	await next();
+});
+
 app.use(bodyParser());
 
 const validRegions = [
@@ -68,7 +75,7 @@ app.use(async (ctx, next) => {
 });
 
 router.get('/active_scrims/', async (ctx) => {
-    let params = ctx.params;
+    const params = ctx.params;
 
     if (params.regions) {
         let regions = params.regions.split(',');
@@ -79,8 +86,9 @@ router.get('/active_scrims/', async (ctx) => {
         params.regions = regions;
     }
 
-    let scrims = await helpers.dbQuery(queries.activeScrims(params), params);
-    let total = (await helpers.dbQuery(queries.activeScrimsCount(params), params))[0].count;
+    const scrims = await helpers.dbQuery(queries.activeScrims(params), params);
+    const {limit, ...countParams} = params;
+    const total = (await helpers.dbQuery(queries.activeScrimsCount(countParams), params))[0].count;
 
     ctx.body = {
         scrims: scrims,
@@ -153,3 +161,7 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 module.exports.handler = serverless(app);
+
+module.exports.reap_scrims = async () => {
+	await helpers.dbQuery(queries.deleteExpiredScrims());
+};
